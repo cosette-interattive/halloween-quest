@@ -10,14 +10,20 @@ export const getMission = (id) => catalog.find((m) => m.id === id);
 export const CATEGORY_LABEL = {
   icebreaker: 'Rompighiaccio',
   social: 'Social',
-  group: 'Gruppo',
   funny: 'Divertente',
-  photo: 'Foto',
-  special: 'Speciale',
+  horror: 'Horror',
 };
 
-// Raggruppa le missioni in base allo stato del partecipante.
-export function summarize(state, now = Date.now()) {
+// Missioni assegnate al partecipante, ordinate per punteggio (oro, bronzo, rame).
+export function assignedMissions(ids) {
+  return ids
+    .map((id) => getMission(id))
+    .filter((m) => m && m.active)
+    .sort((a, b) => b.points - a.points || a.id.localeCompare(b.id));
+}
+
+// Raggruppa le missioni assegnate in base allo stato del partecipante.
+export function summarize(state, assigned = [], now = Date.now()) {
   const result = { available: [], inProgress: [], completed: [], expired: [] };
   const latestByMission = new Map();
 
@@ -26,7 +32,7 @@ export function summarize(state, now = Date.now()) {
     if (r.role === 'requester') latestByMission.set(r.mission_id, r);
   }
 
-  for (const m of getActiveMissions()) {
+  for (const m of assigned) {
     const r = latestByMission.get(m.id);
     if (!r) {
       result.available.push(m);

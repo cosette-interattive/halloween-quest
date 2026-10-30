@@ -1,53 +1,38 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../App.jsx';
-import { CATEGORY_LABEL, summarize } from '../lib/missions.js';
+import { CATEGORY_LABEL, assignedMissions, summarize } from '../lib/missions.js';
 import BackButton from '../components/BackButton.jsx';
 import PointsBadge from '../components/PointsBadge.jsx';
 
-const BATCH = 6;
-
 export default function Missions() {
-  const { state, refresh } = useSession();
-  const [batch, setBatch] = useState(1);
-  const randomKeys = useMemo(() => {
-    const keys = {};
-    for (const m of summarize(null).available) keys[m.id] = Math.random();
-    return keys;
-  }, []);
+  const { state, assignedIds, refresh } = useSession();
 
   useEffect(() => {
     refresh().catch(() => {});
   }, [refresh]);
 
-  const s = summarize(state);
-  const available = [...s.available].sort((a, b) => (randomKeys[a.id] ?? 0) - (randomKeys[b.id] ?? 0));
-  const shown = available.slice(0, BATCH * batch);
+  const assigned = assignedMissions(assignedIds);
+  const s = summarize(state, assigned);
 
   return (
     <section className="stack">
       <BackButton />
-      <h1>Missioni</h1>
+      <h1>Le tue missioni</h1>
+      <p className="muted">Hai {assigned.length} missioni assegnate: ordinate dalla più preziosa.</p>
 
       <h2>Disponibili</h2>
       <div className="list">
-        {shown.map((m) => <MissionCard key={m.id} mission={m} />)}
-        {shown.length === 0 && <p className="muted">Nessuna missione disponibile in questo momento.</p>}
+        {s.available.map((m) => <MissionCard key={m.id} mission={m} />)}
+        {s.available.length === 0 && <p className="muted">Nessuna missione disponibile in questo momento.</p>}
       </div>
-      {shown.length < available.length && (
-        <button className="btn ghost" onClick={() => setBatch((b) => b + 1)}>Altre missioni</button>
-      )}
 
       {s.inProgress.length > 0 && (
         <>
           <h2>In attesa</h2>
           <div className="list">
             {s.inProgress.map(({ request, mission }) => (
-              <MissionCard
-                key={request.id}
-                mission={mission}
-                badge="In attesa del partner"
-              />
+              <MissionCard key={request.id} mission={mission} badge="In attesa del partner" />
             ))}
           </div>
         </>
@@ -78,9 +63,12 @@ export default function Missions() {
 
 function MissionCard({ mission, badge }) {
   return (
-    <Link className="mission-card" to={`/missioni/${mission.id}`}>
+    <Link className={`mission-card tier-${mission.points}`} to={`/missioni/${mission.id}`}>
+      <div className="mission-top">
+        <span className="mission-icon">{mission.icon}</span>
+        <PointsBadge points={mission.points} />
+      </div>
       <span className="badge">{CATEGORY_LABEL[mission.category]}</span>
-      <PointsBadge points={mission.points} />
       {badge && <span className="badge">{badge}</span>}
       <h3>{mission.title}</h3>
       <p className="muted">{mission.description}</p>

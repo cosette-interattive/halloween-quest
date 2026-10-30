@@ -1,10 +1,9 @@
-export const PRIZE_TIERS = [
-  { points: 50, title: 'Gadget Halloween', description: 'Un piccolo gadget a sorpresa.' },
-  { points: 100, title: 'Premio speciale', description: 'Assegnato dall\'organizzatore.' },
-  { points: 150, title: 'Premio grande', description: 'Per chi si è messo davvero in gioco.' },
+export const PRIZES = [
+  { title: 'Estrazione tra i migliori', description: 'I premi verranno annunciati durante la serata e saranno estratti tra i migliori in classifica.' },
+  { title: 'Maschera più bella', description: 'Premio speciale per la maschera più bella della serata.' },
 ];
 
 export const PRIZE_NOTES = [
-  'Estrazione casuale tra tutti i partecipanti con almeno 30 punti.',
-  'Premi per i primi tre in classifica a fine serata.',
+  'I premi verranno annunciati durante la serata e saranno estratti tra i migliori in classifica.',
+  'Ci sarà anche un premio per la maschera più bella.',
 ];

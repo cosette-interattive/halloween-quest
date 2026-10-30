@@ -5,12 +5,12 @@ import PointsBadge from '../components/PointsBadge.jsx';
 import { useSession } from '../App.jsx';
 import Countdown from '../components/Countdown.jsx';
 import { api } from '../lib/api.js';
-import { CATEGORY_LABEL, getMission, summarize } from '../lib/missions.js';
+import { CATEGORY_LABEL, assignedMissions, getMission, summarize } from '../lib/missions.js';
 import { loadOutgoing, saveOutgoing } from '../lib/session.js';
 
 export default function MissionDetail() {
   const { id } = useParams();
-  const { session, state, refresh } = useSession();
+  const { session, state, assignedIds, refresh } = useSession();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [outgoing, setOutgoing] = useState(loadOutgoing);
@@ -22,7 +22,7 @@ export default function MissionDetail() {
   const mission = getMission(id);
   if (!mission) return <Navigate to="/missioni" replace />;
 
-  const s = summarize(state);
+  const s = summarize(state, assignedMissions(assignedIds));
   const isAvailable = s.available.some((m) => m.id === id);
   const current = s.inProgress.find((x) => x.mission.id === id)?.request;
   const isExpired = s.expired.some((x) => x.mission.id === id);
@@ -51,13 +51,17 @@ export default function MissionDetail() {
   return (
     <section className="stack">
       <BackButton />
-      <div className="card">
-        <span className="badge">{CATEGORY_LABEL[mission.category]}</span>
-        <PointsBadge points={mission.points} />
-        <h1>{mission.title}</h1>
-        <p>{mission.description}</p>
-        {mission.instructions && <p className="muted">{mission.instructions}</p>}
-        {mission.conversationStarter && <p><em>"{mission.conversationStarter}"</em></p>}
+      <div className={`card mission-hero tier-${mission.points}`}>
+        <div className="hero-glow" aria-hidden="true" />
+        <span className="hero-icon float">{mission.icon}</span>
+        <div className="hero-text">
+          <span className="badge">{CATEGORY_LABEL[mission.category]}</span>
+          <PointsBadge points={mission.points} />
+          <h1>{mission.title}</h1>
+          <p>{mission.description}</p>
+          {mission.instructions && <p className="muted">{mission.instructions}</p>}
+          {mission.conversationStarter && <p><em>"{mission.conversationStarter}"</em></p>}
+        </div>
       </div>
 
       {isCompleted && <p className="card">Missione completata.</p>}
@@ -65,12 +69,12 @@ export default function MissionDetail() {
       {isAvailable && (
         <>
           <p className="muted">Trova una persona, fate la missione insieme, poi genera il codice.</p>
-          <button className="btn big" disabled={busy} onClick={start}>COMPLETA MISSIONE</button>
+          <button className="btn big pulse" disabled={busy} onClick={start}>COMPLETA MISSIONE</button>
         </>
       )}
 
       {isExpired && !isAvailable && (
-        <button className="btn big" disabled={busy} onClick={start}>RIPROVA</button>
+        <button className="btn big pulse" disabled={busy} onClick={start}>RIPROVA</button>
       )}
 
       {current?.status === 'pending' && (

@@ -23,6 +23,7 @@ export const useSession = () => useContext(SessionContext);
 export default function App() {
   const [session, setSession] = useState(loadSession);
   const [state, setState] = useState(null);
+  const [assignedIds, setAssignedIds] = useState([]);
   const [booting, setBooting] = useState(() => Boolean(loadSession()));
   const [catalogReady, setCatalogReady] = useState(false);
   const [celebration, setCelebration] = useState(null);
@@ -35,8 +36,12 @@ export default function App() {
       return null;
     }
     try {
-      const data = await api.myState(current.token);
+      const [data, mine] = await Promise.all([
+        api.myState(current.token),
+        api.myMissions(current.token),
+      ]);
       setState(data);
+      setAssignedIds(mine);
       return data;
     } catch (e) {
       if (e.code === 'SESSIONE_NON_VALIDA') {
@@ -108,7 +113,7 @@ export default function App() {
 
   if (booting || !catalogReady) return <div className="center">Caricamento...</div>;
 
-  const ctx = { session, state, refresh, login, logout };
+  const ctx = { session, state, assignedIds, refresh, login, logout };
 
   return (
     <SessionContext.Provider value={ctx}>

@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '../App.jsx';
-import { summarize } from '../lib/missions.js';
+import { summarize, assignedMissions } from '../lib/missions.js';
 import { useLeaderboard } from '../lib/useLeaderboard.js';
 
 export default function Dashboard() {
-  const { state, refresh } = useSession();
+  const { state, assignedIds, refresh } = useSession();
   const { rows } = useLeaderboard();
 
   useEffect(() => {
     refresh().catch(() => {});
   }, [refresh]);
 
-  const s = summarize(state);
+  const s = summarize(state, assignedMissions(assignedIds));
   const myIndex = rows.findIndex((r) => r.username === state?.username);
 
   return (
@@ -51,7 +51,7 @@ export default function Dashboard() {
         <Link to="/classifica">Classifica completa</Link>
       </div>
 
-      <Link to="/premi">Premi e soglie</Link>
+      <Link to="/premi">Premi</Link>
     </section>
   );
 }

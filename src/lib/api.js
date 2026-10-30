@@ -50,6 +50,7 @@ export const api = {
   register: (username) => call('register_participant', { p_username: username }),
   recover: (username, token) => call('recover_session', { p_username: username, p_token: token }),
   myState: (token) => call('my_state', { p_token: token }),
+  myMissions: (token) => call('my_missions', { p_token: token }),
   createRequest: (token, missionId) => call('create_request', { p_token: token, p_mission_id: missionId }),
   findRequest: async (token, code) => unwrap(await call('find_request', { p_token: token, p_code: code })),
   confirmRequest: (token, requestId) => call('confirm_request', { p_token: token, p_request_id: requestId }),
