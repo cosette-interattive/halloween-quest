@@ -31,8 +31,42 @@ export default function Dashboard() {
       </div>
 
       <div className="actions">
-        <Link className="btn tile" to="/valida"><span className="icon">🗣️</span>Valida una missione</Link>
-        <Link className="btn tile acid" to="/missioni"><span className="icon">🗺️</span>Vedi le missioni</Link>
+        <Link className="btn tile outline" to="/valida"><span className="icon">🗣️</span>Valida una missione</Link>
+        <Link className="btn tile outline outline-acid" to="/missioni"><span className="icon">🗺️</span>Le tue missioni</Link>
+      </div>
+
+      <div className="card">
+        <h2>Regolamento</h2>
+        <ol className="rules">
+          <li>
+            <span className="num">1</span>
+            <div>
+              <strong>Scegli la tua missione</strong>
+              <span className="desc">Apri le tue missioni e seleziona quella che vuoi completare.</span>
+            </div>
+          </li>
+          <li>
+            <span className="num">2</span>
+            <div>
+              <strong>Trova qualcuno e realizzala</strong>
+              <span className="desc">Fai la missione insieme a un'altra persona.</span>
+            </div>
+          </li>
+          <li>
+            <span className="num">3</span>
+            <div>
+              <strong>Fatti validare</strong>
+              <span className="desc">Chiedi alla persona di confermare la buona riuscita: mostra il codice e lei lo inserisce in Valida una missione.</span>
+            </div>
+          </li>
+          <li>
+            <span className="num">4</span>
+            <div>
+              <strong>Procedi e guarda la classifica</strong>
+              <span className="desc">I punti arrivano subito. Controlla la tua posizione e continua a giocare.</span>
+            </div>
+          </li>
+        </ol>
       </div>
 
       <div className="card">
