@@ -31,8 +31,8 @@ export default function Dashboard() {
       </div>
 
       <div className="actions">
-        <Link className="btn tile outline" to="/valida"><span className="icon">🗣️</span>Valida una missione</Link>
         <Link className="btn tile outline outline-acid" to="/missioni"><span className="icon">🗺️</span>Le tue missioni</Link>
+        <Link className="btn tile outline" to="/valida"><span className="icon">🗣️</span>Valida una missione</Link>
       </div>
 
       <div className="card">
