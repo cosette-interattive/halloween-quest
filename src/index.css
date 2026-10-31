@@ -264,3 +264,7 @@ input:focus { outline: none; border-color: var(--neon); }
 }
 .rules strong { display: block; font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.5px; }
 .rules .desc { color: var(--muted); font-size: 0.95rem; line-height: 1.4; }
+.help {
+  margin: 14px 0 0; padding: 12px 14px; border-radius: 12px;
+  background: #2a1244; border: 2px dashed var(--neon); color: var(--text); font-weight: 700;
+}
