@@ -67,6 +67,9 @@ export default function Dashboard() {
             </div>
           </li>
         </ol>
+        <p className="help">
+          Hai domande, dubbi o hai bisogno di informazioni? Chiedi al DJ in regia.
+        </p>
       </div>
 
       <div className="card">
